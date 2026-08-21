@@ -8,6 +8,7 @@ create table if not exists freelancers (
   platform_earnings_badge text,
   profile_image_url text,
   hired_count integer not null default 0 check (hired_count >= 0),
+  rating real check (rating is null or rating between 0 and 5),
   first_name text not null,
   last_name text not null,
   title text,

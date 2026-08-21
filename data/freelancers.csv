@@ -1,11 +1,11 @@
-link,displayUsername,platformEarningsBadge,profileImageUrl,hiredCount,firstName,lastName,title
-https://contral.com/danielgbright,danielgbright,$750k+,https://api.navii.dev/avatar/danielgbright.png?size=256,72,Daniel G,Bright,Brand and web design for startup at inflection points
-https://contral.com/maralowen,maralowen,$500k+,https://api.navii.dev/avatar/maralowen.png?size=256,54,Mara,Lowen,Product design partner for early-stage SaaS teams
-https://contral.com/jtremblay,jtremblay,$1M+,https://api.navii.dev/avatar/jtremblay.png?size=256,118,Jonah,Tremblay,Full-stack engineer shipping MVPs in weeks not months
-https://contral.com/priyasharma,priyasharma,$250k+,https://api.navii.dev/avatar/priyasharma.png?size=256,31,Priya,Sharma,Growth marketing that turns launches into momentum
-https://contral.com/okekec,okekec,$100k+,https://api.navii.dev/avatar/okekec.png?size=256,19,Chidi,Okeke,Brand identity systems for founders who hate templates
-https://contral.com/sophieln,sophieln,$400k+,https://api.navii.dev/avatar/sophieln.png?size=256,47,Sophie,Lindqvist,No-code builds for operators who need it live yesterday
-https://contral.com/mhernandez,mhernandez,$850k+,https://api.navii.dev/avatar/mhernandez.png?size=256,93,Mateo,Hernandez,Conversion copywriting for B2B pipelines
-https://contral.com/aikeda,aikeda,$300k+,https://api.navii.dev/avatar/aikeda.png?size=256,38,Aiko,Keda,Data dashboards your exec team will actually open
-https://contral.com/tomwhit,tomwhit,$50k+,https://api.navii.dev/avatar/tomwhit.png?size=256,11,Tom,Whitfield,Motion design that makes products feel alive
-https://contral.com/nadiahk,nadiahk,$600k+,https://api.navii.dev/avatar/nadiahk.png?size=256,66,Nadia,Haq,AI integration for teams drowning in manual work
+link,displayUsername,platformEarningsBadge,profileImageUrl,hiredCount,firstName,lastName,title,rating
+https://contral.com/danielgbright,danielgbright,$750k+,https://api.navii.dev/avatar/danielgbright.png?size=256,72,Daniel G,Bright,Brand and web design for startup at inflection points,4.9
+https://contral.com/maralowen,maralowen,$500k+,https://api.navii.dev/avatar/maralowen.png?size=256,54,Mara,Lowen,Product design partner for early-stage SaaS teams,5.0
+https://contral.com/jtremblay,jtremblay,$1M+,https://api.navii.dev/avatar/jtremblay.png?size=256,118,Jonah,Tremblay,Full-stack engineer shipping MVPs in weeks not months,4.8
+https://contral.com/priyasharma,priyasharma,$250k+,https://api.navii.dev/avatar/priyasharma.png?size=256,31,Priya,Sharma,Growth marketing that turns launches into momentum,4.9
+https://contral.com/okekec,okekec,$100k+,https://api.navii.dev/avatar/okekec.png?size=256,19,Chidi,Okeke,Brand identity systems for founders who hate templates,4.7
+https://contral.com/sophieln,sophieln,$400k+,https://api.navii.dev/avatar/sophieln.png?size=256,47,Sophie,Lindqvist,No-code builds for operators who need it live yesterday,4.8
+https://contral.com/mhernandez,mhernandez,$850k+,https://api.navii.dev/avatar/mhernandez.png?size=256,93,Mateo,Hernandez,Conversion copywriting for B2B pipelines,5.0
+https://contral.com/aikeda,aikeda,$300k+,https://api.navii.dev/avatar/aikeda.png?size=256,38,Aiko,Keda,Data dashboards your exec team will actually open,4.6
+https://contral.com/tomwhit,tomwhit,$50k+,https://api.navii.dev/avatar/tomwhit.png?size=256,11,Tom,Whitfield,Motion design that makes products feel alive,4.9
+https://contral.com/nadiahk,nadiahk,$600k+,https://api.navii.dev/avatar/nadiahk.png?size=256,66,Nadia,Haq,AI integration for teams drowning in manual work,4.8
