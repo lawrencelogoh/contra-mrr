@@ -1,69 +1,138 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import {
+  FlexRender,
+  columnFilteringFeature,
+  coreFeatures,
+  createColumnHelper,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  globalFilteringFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
+} from "@tanstack/react-table";
+
+type Freelancer = {
+  name: string;
+  mrr: number;
+  totalEarned: number;
+  rating: number;
+};
+
+const freelancers: Freelancer[] = [
+  { name: "Ada Lovelace", mrr: 1450, totalEarned: 12400, rating: 4.9 },
+  { name: "Grace Hopper", mrr: 1100, totalEarned: 9800, rating: 4.8 },
+  { name: "Alan Turing", mrr: 860, totalEarned: 7250, rating: 4.7 },
+];
+
+const formatCurrency = (value: number) =>
+  value >= 1000
+    ? `$${(value / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 })}K`
+    : `$${value.toLocaleString("en-US")}`;
+
+const features = tableFeatures({
+  ...coreFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+});
+const columnHelper = createColumnHelper<typeof features, Freelancer>();
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: "index",
+    header: "#",
+    cell: (info) => info.row.index + 1,
+  }),
+  columnHelper.accessor("name", {
+    header: "Freelancer",
+    enableSorting: false,
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("mrr", {
+    header: "MRR",
+    cell: (info) => formatCurrency(info.getValue()),
+  }),
+  columnHelper.accessor("totalEarned", {
+    header: "Total Earned",
+    cell: (info) => formatCurrency(info.getValue()),
+  }),
+  columnHelper.accessor("rating", {
+    header: "Rating",
+    cell: (info) => info.getValue(),
+  }),
+]);
 
 export default function Home() {
+  const [globalFilter, setGlobalFilter] = useState("");
+  const table = useTable({
+    features,
+    columns,
+    data: freelancers,
+    globalFilterFn: "includesString",
+    state: { globalFilter },
+    onGlobalFilterChange: setGlobalFilter,
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="flex w-full flex-col gap-6 px-3 pb-8 pt-8">
+      <input
+        value={globalFilter}
+        onChange={(event) => setGlobalFilter(event.target.value)}
+        placeholder="Search freelancers..."
+        className="mx-auto block w-full max-w-3xl rounded-full border border-gray-300 px-6 py-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
+      />
+      <div className="w-full overflow-hidden rounded-xl border border-gray-300">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="bg-gray-200">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="border-b border-gray-300 px-6 py-4 text-base font-semibold uppercase tracking-wide"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <FlexRender header={header} />
+                      {header.column.getCanSort() && (
+                        <button
+                          type="button"
+                          onClick={header.column.getToggleSortingHandler()}
+                          className="text-xs text-gray-500 transition-colors hover:text-gray-900"
+                          aria-label={`Sort by ${String(header.column.columnDef.header)}`}
+                        >
+                          {header.column.getIsSorted() === "asc"
+                            ? "▲"
+                            : header.column.getIsSorted() === "desc"
+                              ? "▼"
+                              : "⇅"}
+                        </button>
+                      )}
+                    </span>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getAllCells().map((cell) => (
+                  <td key={cell.id} className="px-6 py-4 text-base">
+                    <FlexRender cell={cell} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </main>
   );
 }

@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import-csv": "node --env-file=.env.local scripts/import-csv.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-table": "^9.1.2",
+    "csv-parse": "^7.0.2",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8"
