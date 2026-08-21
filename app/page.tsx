@@ -29,16 +29,116 @@ type Freelancer = {
 };
 
 const freelancers: Freelancer[] = [
-  { link: "https://contral.com/danielgbright", displayUsername: "danielgbright", platformEarningsBadge: "$750k+", profileImageUrl: "https://api.navii.dev/avatar/danielgbright.png?size=256", hiredCount: 72, firstName: "Daniel G", lastName: "Bright", title: "Brand and web design for startup at inflection points", rating: 4.9 },
-  { link: "https://contral.com/maralowen", displayUsername: "maralowen", platformEarningsBadge: "$500k+", profileImageUrl: "https://api.navii.dev/avatar/maralowen.png?size=256", hiredCount: 54, firstName: "Mara", lastName: "Lowen", title: "Product design partner for early-stage SaaS teams", rating: 5 },
-  { link: "https://contral.com/jtremblay", displayUsername: "jtremblay", platformEarningsBadge: "$1M+", profileImageUrl: "https://api.navii.dev/avatar/jtremblay.png?size=256", hiredCount: 118, firstName: "Jonah", lastName: "Tremblay", title: "Full-stack engineer shipping MVPs in weeks not months", rating: 4.8 },
-  { link: "https://contral.com/priyasharma", displayUsername: "priyasharma", platformEarningsBadge: "$250k+", profileImageUrl: "https://api.navii.dev/avatar/priyasharma.png?size=256", hiredCount: 31, firstName: "Priya", lastName: "Sharma", title: "Growth marketing that turns launches into momentum", rating: 4.9 },
-  { link: "https://contral.com/okekec", displayUsername: "okekec", platformEarningsBadge: "$100k+", profileImageUrl: "https://api.navii.dev/avatar/okekec.png?size=256", hiredCount: 19, firstName: "Chidi", lastName: "Okeke", title: "Brand identity systems for founders who hate templates", rating: 4.7 },
-  { link: "https://contral.com/sophieln", displayUsername: "sophieln", platformEarningsBadge: "$400k+", profileImageUrl: "https://api.navii.dev/avatar/sophieln.png?size=256", hiredCount: 47, firstName: "Sophie", lastName: "Lindqvist", title: "No-code builds for operators who need it live yesterday", rating: 4.8 },
-  { link: "https://contral.com/mhernandez", displayUsername: "mhernandez", platformEarningsBadge: "$850k+", profileImageUrl: "https://api.navii.dev/avatar/mhernandez.png?size=256", hiredCount: 93, firstName: "Mateo", lastName: "Hernandez", title: "Conversion copywriting for B2B pipelines", rating: 5 },
-  { link: "https://contral.com/aikeda", displayUsername: "aikeda", platformEarningsBadge: "$300k+", profileImageUrl: "https://api.navii.dev/avatar/aikeda.png?size=256", hiredCount: 38, firstName: "Aiko", lastName: "Keda", title: "Data dashboards your exec team will actually open", rating: 4.6 },
-  { link: "https://contral.com/tomwhit", displayUsername: "tomwhit", platformEarningsBadge: "$50k+", profileImageUrl: "https://api.navii.dev/avatar/tomwhit.png?size=256", hiredCount: 11, firstName: "Tom", lastName: "Whitfield", title: "Motion design that makes products feel alive", rating: 4.9 },
-  { link: "https://contral.com/nadiahk", displayUsername: "nadiahk", platformEarningsBadge: "$600k+", profileImageUrl: "https://api.navii.dev/avatar/nadiahk.png?size=256", hiredCount: 66, firstName: "Nadia", lastName: "Haq", title: "AI integration for teams drowning in manual work", rating: 4.8 },
+  {
+    link: "https://contral.com/danielgbright",
+    displayUsername: "danielgbright",
+    platformEarningsBadge: "$750k+",
+    profileImageUrl: "https://api.navii.dev/avatar/danielgbright.png?size=256",
+    hiredCount: 72,
+    firstName: "Daniel G",
+    lastName: "Bright",
+    title: "Brand and web design for startup at inflection points",
+    rating: 4.9,
+  },
+  {
+    link: "https://contral.com/maralowen",
+    displayUsername: "maralowen",
+    platformEarningsBadge: "$500k+",
+    profileImageUrl: "https://api.navii.dev/avatar/maralowen.png?size=256",
+    hiredCount: 54,
+    firstName: "Mara",
+    lastName: "Lowen",
+    title: "Product design partner for early-stage SaaS teams",
+    rating: 5,
+  },
+  {
+    link: "https://contral.com/jtremblay",
+    displayUsername: "jtremblay",
+    platformEarningsBadge: "$1M+",
+    profileImageUrl: "https://api.navii.dev/avatar/jtremblay.png?size=256",
+    hiredCount: 118,
+    firstName: "Jonah",
+    lastName: "Tremblay",
+    title: "Full-stack engineer shipping MVPs in weeks not months",
+    rating: 4.8,
+  },
+  {
+    link: "https://contral.com/priyasharma",
+    displayUsername: "priyasharma",
+    platformEarningsBadge: "$250k+",
+    profileImageUrl: "https://api.navii.dev/avatar/priyasharma.png?size=256",
+    hiredCount: 31,
+    firstName: "Priya",
+    lastName: "Sharma",
+    title: "Growth marketing that turns launches into momentum",
+    rating: 4.9,
+  },
+  {
+    link: "https://contral.com/okekec",
+    displayUsername: "okekec",
+    platformEarningsBadge: "$100k+",
+    profileImageUrl: "https://api.navii.dev/avatar/okekec.png?size=256",
+    hiredCount: 19,
+    firstName: "Chidi",
+    lastName: "Okeke",
+    title: "Brand identity systems for founders who hate templates",
+    rating: 4.7,
+  },
+  {
+    link: "https://contral.com/sophieln",
+    displayUsername: "sophieln",
+    platformEarningsBadge: "$400k+",
+    profileImageUrl: "https://api.navii.dev/avatar/sophieln.png?size=256",
+    hiredCount: 47,
+    firstName: "Sophie",
+    lastName: "Lindqvist",
+    title: "No-code builds for operators who need it live yesterday",
+    rating: 4.8,
+  },
+  {
+    link: "https://contral.com/mhernandez",
+    displayUsername: "mhernandez",
+    platformEarningsBadge: "$850k+",
+    profileImageUrl: "https://api.navii.dev/avatar/mhernandez.png?size=256",
+    hiredCount: 93,
+    firstName: "Mateo",
+    lastName: "Hernandez",
+    title: "Conversion copywriting for B2B pipelines",
+    rating: 5,
+  },
+  {
+    link: "https://contral.com/aikeda",
+    displayUsername: "aikeda",
+    platformEarningsBadge: "$300k+",
+    profileImageUrl: "https://api.navii.dev/avatar/aikeda.png?size=256",
+    hiredCount: 38,
+    firstName: "Aiko",
+    lastName: "Keda",
+    title: "Data dashboards your exec team will actually open",
+    rating: 4.6,
+  },
+  {
+    link: "https://contral.com/tomwhit",
+    displayUsername: "tomwhit",
+    platformEarningsBadge: "$50k+",
+    profileImageUrl: "https://api.navii.dev/avatar/tomwhit.png?size=256",
+    hiredCount: 11,
+    firstName: "Tom",
+    lastName: "Whitfield",
+    title: "Motion design that makes products feel alive",
+    rating: 4.9,
+  },
+  {
+    link: "https://contral.com/nadiahk",
+    displayUsername: "nadiahk",
+    platformEarningsBadge: "$600k+",
+    profileImageUrl: "https://api.navii.dev/avatar/nadiahk.png?size=256",
+    hiredCount: 66,
+    firstName: "Nadia",
+    lastName: "Haq",
+    title: "AI integration for teams drowning in manual work",
+    rating: 4.8,
+  },
 ];
 
 const features = tableFeatures({
@@ -83,7 +183,8 @@ const columns = columnHelper.columns([
         {info.row.getDisplayIndex() + 1}
       </span>
     ),
-  }),  columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+  }),
+  columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: "freelancer",
     header: "Freelancer",
     enableSorting: false,
@@ -119,18 +220,23 @@ const columns = columnHelper.columns([
       </span>
     ),
   }),
-  columnHelper.accessor((row) => parseEarningsBadge(row.platformEarningsBadge), {
-    id: "earned",
-    header: "Earned",
-    cell: (info) => (
-      <span className="text-sm text-zinc-900">
-        {info.row.original.platformEarningsBadge}
-      </span>
-    ),
-  }),
+  columnHelper.accessor(
+    (row) => parseEarningsBadge(row.platformEarningsBadge),
+    {
+      id: "earned",
+      header: "Earned",
+      cell: (info) => (
+        <span className="text-sm text-zinc-900">
+          {info.row.original.platformEarningsBadge}
+        </span>
+      ),
+    },
+  ),
   columnHelper.accessor("hiredCount", {
     header: "Hired",
-    cell: (info) => <span className="text-sm text-zinc-900">{info.getValue()}</span>,
+    cell: (info) => (
+      <span className="text-sm text-zinc-900">{info.getValue()}</span>
+    ),
   }),
   columnHelper.accessor("rating", {
     header: "Rating",
@@ -163,61 +269,68 @@ export default function Home() {
         placeholder="Search freelancers..."
         className="mx-auto block w-full max-w-3xl rounded-full border border-zinc-200 bg-white px-6 py-3 text-lg text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-400"
       />
-      <div className="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white">
-        <table className="w-full border-collapse text-left">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="bg-zinc-100">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="border-b border-zinc-200 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <FlexRender header={header} />
-                      {header.column.getCanSort() && (
-                        <button
-                          type="button"
-                          onClick={header.column.getToggleSortingHandler()}
-                          className="text-xs text-zinc-400 transition-colors hover:text-zinc-600"
-                          aria-label={`Sort by ${String(header.column.columnDef.header)}`}
-                        >
-                          {header.column.getIsSorted() === "asc"
-                            ? "▲"
-                            : header.column.getIsSorted() === "desc"
-                              ? "▼"
-                              : "⇅"}
-                        </button>
-                      )}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-zinc-100">
-            {rows.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-6 py-16 text-center text-sm text-zinc-500"
-                >
-                  No freelancers found. Try a different search.
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getAllCells().map((cell) => (
-                    <td key={cell.id} className="px-6 py-3.5 align-middle">
-                      <FlexRender cell={cell} />
-                    </td>
+      <div className="flex w-full flex-col gap-2">
+        <p className="self-end text-xs text-zinc-500">
+          {rows.length.toLocaleString()} of{" "}
+          {freelancers.length.toLocaleString()}{" "}
+          {rows.length === 1 ? "freelancer" : "freelancers"}
+        </p>
+        <div className="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white">
+          <table className="w-full border-collapse text-left">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="bg-zinc-100">
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="border-b border-zinc-200 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <FlexRender header={header} />
+                        {header.column.getCanSort() && (
+                          <button
+                            type="button"
+                            onClick={header.column.getToggleSortingHandler()}
+                            className="text-xs text-zinc-400 transition-colors hover:text-zinc-600"
+                            aria-label={`Sort by ${String(header.column.columnDef.header)}`}
+                          >
+                            {header.column.getIsSorted() === "asc"
+                              ? "▲"
+                              : header.column.getIsSorted() === "desc"
+                                ? "▼"
+                                : "⇅"}
+                          </button>
+                        )}
+                      </span>
+                    </th>
                   ))}
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody className="divide-y divide-zinc-100">
+              {rows.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="px-6 py-16 text-center text-sm text-zinc-500"
+                  >
+                    No freelancers found. Try a different search.
+                  </td>
+                </tr>
+              ) : (
+                rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getAllCells().map((cell) => (
+                      <td key={cell.id} className="px-6 py-3.5 align-middle">
+                        <FlexRender cell={cell} />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );
