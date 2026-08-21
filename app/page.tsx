@@ -153,6 +153,8 @@ export default function Home() {
     onGlobalFilterChange: setGlobalFilter,
   });
 
+  const rows = table.getRowModel().rows;
+
   return (
     <main className="flex min-h-screen w-full flex-col gap-6 bg-zinc-50 px-3 pb-8 pt-8">
       <input
@@ -194,15 +196,26 @@ export default function Home() {
             ))}
           </thead>
           <tbody className="divide-y divide-zinc-100">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getAllCells().map((cell) => (
-                  <td key={cell.id} className="px-6 py-3.5 align-middle">
-                    <FlexRender cell={cell} />
-                  </td>
-                ))}
+            {rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-6 py-16 text-center text-sm text-zinc-500"
+                >
+                  No freelancers found. Try a different search.
+                </td>
               </tr>
-            ))}
+            ) : (
+              rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => (
+                    <td key={cell.id} className="px-6 py-3.5 align-middle">
+                      <FlexRender cell={cell} />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
