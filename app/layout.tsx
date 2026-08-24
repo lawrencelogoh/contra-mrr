@@ -18,7 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <header className="border-b border-zinc-200 bg-white">
-          <nav className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
+          <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
             <Link
               href="/"
               className="flex items-center gap-2 text-lg text-zinc-900"
