@@ -117,28 +117,6 @@ const freelancers: Freelancer[] = [
     title: "Data dashboards your exec team will actually open",
     rating: 4.6,
   },
-  {
-    link: "https://contral.com/tomwhit",
-    displayUsername: "tomwhit",
-    platformEarningsBadge: "$50k+",
-    profileImageUrl: "https://api.navii.dev/avatar/tomwhit.png?size=256",
-    hiredCount: 11,
-    firstName: "Tom",
-    lastName: "Whitfield",
-    title: "Motion design that makes products feel alive",
-    rating: 4.9,
-  },
-  {
-    link: "https://contral.com/nadiahk",
-    displayUsername: "nadiahk",
-    platformEarningsBadge: "$600k+",
-    profileImageUrl: "https://api.navii.dev/avatar/nadiahk.png?size=256",
-    hiredCount: 66,
-    firstName: "Nadia",
-    lastName: "Haq",
-    title: "AI integration for teams drowning in manual work",
-    rating: 4.8,
-  },
 ];
 
 const features = tableFeatures({
@@ -262,7 +240,8 @@ export default function Home() {
   const rows = table.getRowModel().rows;
 
   return (
-    <main className="flex min-h-screen w-full flex-col gap-6 bg-zinc-50 px-3 pb-8 pt-8">
+    <main className="flex min-h-screen w-full flex-col bg-zinc-50 pb-8 pt-8">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6">
       <input
         value={globalFilter}
         onChange={(event) => setGlobalFilter(event.target.value)}
@@ -283,7 +262,7 @@ export default function Home() {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="border-b border-zinc-200 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
+                      className="border-b border-zinc-200 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
                     >
                       <span className="flex items-center gap-1.5">
                         <FlexRender header={header} />
@@ -312,7 +291,7 @@ export default function Home() {
                 <tr>
                   <td
                     colSpan={columns.length}
-                    className="px-6 py-16 text-center text-sm text-zinc-500"
+                    className="px-5 py-16 text-center text-sm text-zinc-500"
                   >
                     No freelancers found. Try a different search.
                   </td>
@@ -321,7 +300,7 @@ export default function Home() {
                 rows.map((row) => (
                   <tr key={row.id}>
                     {row.getAllCells().map((cell) => (
-                      <td key={cell.id} className="px-6 py-3.5 align-middle">
+                      <td key={cell.id} className="px-5 py-3.5 align-middle">
                         <FlexRender cell={cell} />
                       </td>
                     ))}
@@ -331,6 +310,7 @@ export default function Home() {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </main>
   );
