@@ -177,16 +177,26 @@ async function fetchFeed(
       seenIds.add(up.id);
       profiles.push(up);
       newOnPage++;
+
+      const name = [up.firstName, up.lastName].filter(Boolean).join(" ") || chalk.dim("—");
+      const title = up.title || chalk.dim("—");
+      const earnings = up.platformEarningsBadge || chalk.dim("—");
+      const location = up.location || chalk.dim("—");
+
+      console.log(
+        `  ${chalk.green("+")}  ${chalk.bold(up.displayUsername)}  ${chalk.dim(name)}  ${chalk.cyan(title)}  ${chalk.yellow(earnings)}  ${chalk.dim(location)}`,
+      );
+
       if (profiles.length >= limit) break;
     }
 
     const total = chalk.bold(String(profiles.length));
     const pageCount = chalk.dim(`page ${page}`);
-    const badge = edges.length > 0 ? chalk.green(`+${newOnPage} new`) : chalk.dim("+0 new");
+    const badge = newOnPage > 0 ? chalk.green(`+${newOnPage} new`) : chalk.dim("+0 new");
     const cursor = pageInfo.hasNextPage ? chalk.dim(`cursor: ${pageInfo.endCursor.slice(0, 12)}…`) : chalk.yellow("end of feed");
 
-    process.stdout.write(
-      `\r${chalk.gray(ts())}  │  ${pageCount}  │  ${badge}  │  total ${total}  │  ${cursor}   `,
+    console.log(
+      `${chalk.gray(ts())}  │  ${pageCount}  │  ${badge}  │  total ${total}  │  ${cursor}`,
     );
 
     if (!pageInfo.hasNextPage) {
@@ -208,6 +218,7 @@ async function fetchFeed(
 // ---------------------------------------------------------------------------
 
 interface DbProfile {
+  link: string;
   display_username: string;
   platform_earnings_badge: string | null;
   hired_count: number;
@@ -226,6 +237,7 @@ function toDbProfile(p: ContraProfile): DbProfile {
   const wp = p.workPreferences;
   const rev = p.visibleUserReviewSummary;
   return {
+    link: `https://contra.com/${p.displayUsername}`,
     display_username: p.displayUsername!,
     platform_earnings_badge: p.platformEarningsBadge || null,
     hired_count: p.hiredCount ?? 0,
