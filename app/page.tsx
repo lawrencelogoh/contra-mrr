@@ -14,7 +14,7 @@ async function getFreelancers(): Promise<Freelancer[]> {
       .select(
         "link, display_username, platform_earnings_badge, hired_count, first_name, last_name, title, rating"
       )
-      .order("created_at")
+      .order("feed_position", { nullsFirst: false })
       .range(freelancers.length, freelancers.length + PAGE_SIZE - 1);
 
     if (error) {

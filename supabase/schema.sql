@@ -17,6 +17,7 @@ create table if not exists freelancers (
   minimum_hourly_rate integer,
   is_currently_available boolean,
   follower_count integer,
+  feed_position integer,
   created_at timestamptz not null default now()
 );
 
@@ -25,6 +26,7 @@ alter table freelancers add column if not exists location text;
 alter table freelancers add column if not exists minimum_hourly_rate integer;
 alter table freelancers add column if not exists is_currently_available boolean;
 alter table freelancers add column if not exists follower_count integer;
+alter table freelancers add column if not exists feed_position integer;
 alter table freelancers alter column last_name drop not null;
 
 -- Public read-only: the page displays this directory publicly;

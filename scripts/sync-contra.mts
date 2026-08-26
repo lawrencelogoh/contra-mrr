@@ -234,9 +234,10 @@ interface DbProfile {
   follower_count: number | null;
   profile_image_url: string | null;
   rating: number | null;
+  feed_position: number | null;
 }
 
-function toDbProfile(p: ContraProfile): DbProfile {
+function toDbProfile(p: ContraProfile, position: number): DbProfile {
   const wp = p.workPreferences;
   const rev = p.visibleUserReviewSummary;
   return {
@@ -253,6 +254,7 @@ function toDbProfile(p: ContraProfile): DbProfile {
     follower_count: p.followerCount ?? null,
     profile_image_url: p.profileImageUrl || null,
     rating: rev?.averageScore ?? null,
+    feed_position: position,
   };
 }
 
@@ -269,6 +271,7 @@ function profilesEqual(a: DbProfile, b: DbProfile): boolean {
     "follower_count",
     "profile_image_url",
     "rating",
+    "feed_position",
   ] as const;
   for (const k of keys) {
     if (a[k] !== b[k]) return false;
@@ -350,13 +353,14 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
   let unchanged = 0;
   let skipped = 0;
 
-  for (const p of profiles) {
+  for (let i = 0; i < profiles.length; i++) {
+    const p = profiles[i];
     if (!p.displayUsername) {
       skipped++;
       continue;
     }
 
-    const db = toDbProfile(p);
+    const db = toDbProfile(p, i);
     const existing = existingMap.get(p.displayUsername);
 
     if (!existing) {
