@@ -7,12 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import-csv": "node --env-file=.env.local scripts/import-csv.mjs"
+    "sync-contra": "tsx --env-file=.env.local scripts/sync-contra.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-table": "^9.1.2",
-    "csv-parse": "^7.0.2",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -22,9 +21,11 @@
     "@types/node": "^20.19.43",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "chalk": "^6.0.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.3.2",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.33.0"
