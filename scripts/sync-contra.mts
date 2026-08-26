@@ -6,6 +6,7 @@
  *   pnpm sync-contra                     # scrape discover feed, upsert new users (default limit 5000)
  *   pnpm sync-contra --limit 100         # stop after 100 profiles from the API
  *   pnpm sync-contra --dry-run           # show what would change, don't write
+ *   pnpm sync-contra --clear             # clear the database before syncing
  *   pnpm sync-contra --url <custom-url>  # scrape a specific Contra page feed
  *   pnpm sync-contra --delay 3000        # ms between API calls (default 2000)
  */
@@ -41,6 +42,7 @@ function parseArgs() {
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === "--dry-run") flags["dry-run"] = true;
+    else if (a === "--clear") flags["clear"] = true;
     else if (a === "--limit" && args[i + 1]) flags["limit"] = args[++i];
     else if (a === "--delay" && args[i + 1]) flags["delay"] = args[++i];
     else if (a === "--url" && args[i + 1]) flags["url"] = args[++i];
@@ -51,6 +53,7 @@ function parseArgs() {
     limit: typeof flags["limit"] === "string" ? parseInt(flags["limit"], 10) : 5000,
     delay: typeof flags["delay"] === "string" ? parseInt(flags["delay"], 10) : 2000,
     dryRun: flags["dry-run"] === true,
+    clear: flags["clear"] === true,
   };
 }
 
@@ -288,7 +291,7 @@ interface SyncResult {
   elapsed: number;
 }
 
-async function sync(url: string, limit: number, delayMs: number, dryRun: boolean): Promise<SyncResult> {
+async function sync(url: string, limit: number, delayMs: number, dryRun: boolean, clear: boolean): Promise<SyncResult> {
   const t0 = Date.now();
 
   // 1. Fetch from Contra
@@ -306,6 +309,17 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
   const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+
+  if (clear) {
+    if (dryRun) {
+      log(chalk.magenta("!"), "Dry run — would clear freelancers table.");
+    } else {
+      log(chalk.red("⟳"), "Clearing freelancers table...");
+      const { error } = await supabase.from("freelancers").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      if (error) throw new Error(`Failed to clear table: ${error.message}`);
+      log(chalk.green("✓"), "Freelancers table cleared.");
+    }
+  }
 
   const existingMap = new Map<string, Record<string, unknown>>();
   let offset = 0;
@@ -440,7 +454,7 @@ async function main() {
     log(chalk.magenta("!"), chalk.bold("DRY RUN") + " — no changes will be written\n");
   }
 
-  const result = await sync(opts.url, opts.limit, opts.delay, opts.dryRun);
+  const result = await sync(opts.url, opts.limit, opts.delay, opts.dryRun, opts.clear);
 
   console.log();
   console.log(chalk.bold.cyan("  Summary"));

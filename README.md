@@ -39,6 +39,9 @@ pnpm sync-contra --limit 100
 # Preview changes without writing to the database
 pnpm sync-contra --dry-run
 
+# Clear the database before syncing
+pnpm sync-contra --clear
+
 # Scrape a specific Contra page
 pnpm sync-contra --url https://contra.com/discover?view=people&sort=newest
 

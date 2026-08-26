@@ -176,10 +176,7 @@ export default function FreelancersTable({
     pageIndex: 0,
     pageSize: 25,
   });
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "earned", desc: true },
-    { id: "hiredCount", desc: true },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useTable({
     features,
     columns,
