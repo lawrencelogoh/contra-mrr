@@ -48,11 +48,19 @@ create policy "public read freelancers"
 create table if not exists gigs (
   id uuid primary key default gen_random_uuid(),
   freelancer_id uuid not null references freelancers (id) on delete cascade,
+  project_analytics_id bigint not null unique,
   title text not null,
   amount numeric(12, 2) check (amount is null or amount >= 0),
-  created_at timestamptz not null default now(),
-  unique (freelancer_id, title)
+  created_at timestamptz not null default now()
 );
+
+-- Migration: gigs used to be unique on (freelancer_id, title), which rejected
+-- freelancers with multiple same-titled projects. They are now keyed by contra's
+-- global portfolio project id (`project_analytics_id`). Existing rows have no
+-- project id and cannot be backfilled, so drop the table and let it be recreated
+-- (re-run sync with --gigs), or drop only the old constraint after backfilling.
+-- alter table gigs add column if not exists project_analytics_id bigint unique;
+-- alter table gigs drop constraint if exists gigs_freelancer_id_title_key;
 
 create index if not exists gigs_freelancer_id_idx on gigs (freelancer_id);
 

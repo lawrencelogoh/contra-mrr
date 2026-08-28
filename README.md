@@ -47,6 +47,9 @@ pnpm sync-contra --url https://contra.com/discover?view=people&sort=newest
 
 # Adjust delay between API calls (ms, default 2000)
 pnpm sync-contra --delay 3000
+
+# Also fetch each freelancer's work and sync it into the gigs table
+pnpm sync-contra --gigs
 ```
 
 ## Work Scripts

@@ -9,10 +9,16 @@
  *   pnpm sync-contra --clear             # clear the database before syncing
  *   pnpm sync-contra --url <custom-url>  # scrape a specific Contra page feed
  *   pnpm sync-contra --delay 3000        # ms between API calls (default 2000)
+ *   pnpm sync-contra --gigs              # also fetch each freelancer's work and sync into the gigs table
  */
 
 import { createClient } from "@supabase/supabase-js";
 import chalk from "chalk";
+import {
+  fetchUserProfileSectionId,
+  fetchPortfolioProjects,
+  toGigRecord,
+} from "./contra-work.mts";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -43,6 +49,7 @@ function parseArgs() {
     const a = args[i];
     if (a === "--dry-run") flags["dry-run"] = true;
     else if (a === "--clear") flags["clear"] = true;
+    else if (a === "--gigs") flags["gigs"] = true;
     else if (a === "--limit" && args[i + 1]) flags["limit"] = args[++i];
     else if (a === "--delay" && args[i + 1]) flags["delay"] = args[++i];
     else if (a === "--url" && args[i + 1]) flags["url"] = args[++i];
@@ -54,6 +61,7 @@ function parseArgs() {
     delay: typeof flags["delay"] === "string" ? parseInt(flags["delay"], 10) : 2000,
     dryRun: flags["dry-run"] === true,
     clear: flags["clear"] === true,
+    gigs: flags["gigs"] === true,
   };
 }
 
@@ -280,6 +288,83 @@ function profilesEqual(a: DbProfile, b: DbProfile): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// Gig sync
+// ---------------------------------------------------------------------------
+
+interface GigSyncResult {
+  newGigs: number;
+  gigErrors: number;
+}
+
+async function syncGigs(
+  supabase: ReturnType<typeof createClient>,
+  profiles: ContraProfile[],
+  idByUsername: Map<string, string>,
+  delayMs: number,
+  dryRun: boolean,
+): Promise<GigSyncResult> {
+  console.log();
+  log(chalk.cyan("▸"), "Fetching work (gigs) for each freelancer...\n");
+
+  const upserts: Array<{ freelancer_id: string; project_analytics_id: number; title: string; amount: number | null }> = [];
+  let gigErrors = 0;
+
+  for (const profile of profiles) {
+    const username = profile.displayUsername;
+    if (!username) continue;
+
+    const freelancerId = idByUsername.get(username);
+    if (!freelancerId) {
+      gigErrors++;
+      log(chalk.yellow("!"), `${chalk.bold(username)} — no freelancer id, skipping`);
+      continue;
+    }
+
+    try {
+      const sectionId = await fetchUserProfileSectionId(username);
+      const projects = await fetchPortfolioProjects(sectionId, delayMs);
+      for (const p of projects) {
+        upserts.push({ freelancer_id: freelancerId, ...toGigRecord(p) });
+      }
+      log(
+        chalk.green("+"),
+        `${chalk.bold(username)}  ${chalk.dim(String(projects.length))} gigs (${chalk.green(String(upserts.length))} total)`,
+      );
+      await sleep(delayMs);
+    } catch (err) {
+      gigErrors++;
+      log(chalk.red("✕"), `${chalk.bold(username)} — ${(err as Error).message}`);
+    }
+  }
+
+  if (dryRun || upserts.length === 0) {
+    if (dryRun) log(chalk.magenta("!"), "Dry run — no gigs written to database.");
+    else log(chalk.yellow("!"), "No gigs fetched.");
+    return { newGigs: dryRun ? upserts.length : 0, gigErrors };
+  }
+
+  console.log();
+  log(chalk.blue("⟳"), `Upserting ${chalk.bold(String(upserts.length))} gigs into database...`);
+
+  let written = 0;
+  for (let i = 0; i < upserts.length; i += UPSERT_BATCH) {
+    const batch = upserts.slice(i, i + UPSERT_BATCH);
+    const { error } = await supabase
+      .from("gigs")
+      .upsert(batch, { onConflict: "project_analytics_id" });
+    if (error) {
+      log(chalk.red("✕"), `Gig batch error: ${error.message}`);
+      gigErrors += batch.length;
+    } else {
+      written += batch.length;
+    }
+  }
+
+  log(chalk.green("✓"), `Gigs upserted: ${chalk.bold(String(written))}`);
+  return { newGigs: written, gigErrors };
+}
+
+// ---------------------------------------------------------------------------
 // Main sync
 // ---------------------------------------------------------------------------
 
@@ -292,9 +377,11 @@ interface SyncResult {
   feedTitle: string;
   pages: number;
   elapsed: number;
+  newGigs: number;
+  gigErrors: number;
 }
 
-async function sync(url: string, limit: number, delayMs: number, dryRun: boolean, clear: boolean): Promise<SyncResult> {
+async function sync(url: string, limit: number, delayMs: number, dryRun: boolean, clear: boolean, withGigs: boolean): Promise<SyncResult> {
   const t0 = Date.now();
 
   // 1. Fetch from Contra
@@ -302,7 +389,7 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
 
   if (profiles.length === 0) {
     log(chalk.yellow("!"), "No profiles found in feed.");
-    return { newCount: 0, updatedCount: 0, unchangedCount: 0, skippedCount: 0, totalInDb: 0, feedTitle: title, pages, elapsed: (Date.now() - t0) / 1000 };
+    return { newCount: 0, updatedCount: 0, unchangedCount: 0, skippedCount: 0, totalInDb: 0, feedTitle: title, pages, elapsed: (Date.now() - t0) / 1000, newGigs: 0, gigErrors: 0 };
   }
 
   // 2. Load existing usernames from DB
@@ -394,10 +481,17 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
       feedTitle: title,
       pages,
       elapsed: (Date.now() - t0) / 1000,
+      newGigs: 0,
+      gigErrors: 0,
     };
   }
 
   const all = [...toInsert, ...toUpdate.map((u) => u.fresh)];
+  const idByUsername = new Map<string, string>();
+  for (const [username, row] of existingMap) {
+    if (typeof row.id === "string") idByUsername.set(username, row.id);
+  }
+
   if (all.length > 0) {
     console.log();
     log(chalk.blue("⟳"), `Upserting ${chalk.bold(String(all.length))} profiles into database...\n`);
@@ -405,12 +499,18 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
     let written = 0;
     for (let i = 0; i < all.length; i += UPSERT_BATCH) {
       const batch = all.slice(i, i + UPSERT_BATCH);
-      const { error } = await supabase.from("freelancers").upsert(batch, { onConflict: "display_username" });
+      const { data, error } = await supabase
+        .from("freelancers")
+        .upsert(batch, { onConflict: "display_username" })
+        .select("id, display_username");
 
       if (error) {
         log(chalk.red("✕"), `Batch error: ${error.message}`);
       } else {
         written += batch.length;
+        for (const row of data ?? []) {
+          if (row.id && row.display_username) idByUsername.set(row.display_username, row.id);
+        }
         const pct = Math.round((written / all.length) * 100);
         const bar = "█".repeat(Math.round(pct / 5)) + "░".repeat(20 - Math.round(pct / 5));
         process.stdout.write(
@@ -424,6 +524,14 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
     log(chalk.green("✓"), "All profiles already up to date — nothing to write.");
   }
 
+  let newGigs = 0;
+  let gigErrors = 0;
+  if (withGigs) {
+    const gigResult = await syncGigs(supabase, profiles, idByUsername, delayMs, dryRun);
+    newGigs = gigResult.newGigs;
+    gigErrors = gigResult.gigErrors;
+  }
+
   const totalInDb = existingMap.size + toInsert.length;
   return {
     newCount: toInsert.length,
@@ -434,6 +542,8 @@ async function sync(url: string, limit: number, delayMs: number, dryRun: boolean
     feedTitle: title,
     pages,
     elapsed: (Date.now() - t0) / 1000,
+    newGigs,
+    gigErrors,
   };
 }
 
@@ -458,7 +568,7 @@ async function main() {
     log(chalk.magenta("!"), chalk.bold("DRY RUN") + " — no changes will be written\n");
   }
 
-  const result = await sync(opts.url, opts.limit, opts.delay, opts.dryRun, opts.clear);
+  const result = await sync(opts.url, opts.limit, opts.delay, opts.dryRun, opts.clear, opts.gigs);
 
   console.log();
   console.log(chalk.bold.cyan("  Summary"));
@@ -470,6 +580,10 @@ async function main() {
   console.log(`  Unchanged:   ${chalk.dim(String(result.unchangedCount))}`);
   if (result.skippedCount > 0) console.log(`  Skipped:     ${chalk.red.bold(String(result.skippedCount))}`);
   console.log(`  Total in DB: ${chalk.bold(String(result.totalInDb))}`);
+  if (opts.gigs) {
+    console.log(`  Gigs:        ${chalk.green.bold(String(result.newGigs))}`);
+    if (result.gigErrors > 0) console.log(`  Gig errors:  ${chalk.red.bold(String(result.gigErrors))}`);
+  }
   console.log(`  Time:        ${chalk.bold(result.elapsed.toFixed(1) + "s")}`);
   console.log();
 }
