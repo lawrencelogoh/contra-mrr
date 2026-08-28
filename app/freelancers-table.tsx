@@ -29,6 +29,7 @@ export type Freelancer = {
   lastName: string | null;
   title: string | null;
   rating: number | null;
+  gigEarnings: number | null;
 };
 
 const profileImageUrl = (displayUsername: string) =>
@@ -139,6 +140,18 @@ const columns = columnHelper.columns([
       <span className="text-sm text-zinc-900">{info.getValue()}</span>
     ),
   }),
+  columnHelper.accessor("gigEarnings", {
+    id: "gigEarnings",
+    header: "Gig Earnings",
+    cell: (info) => {
+      const value = info.getValue();
+      return (
+        <span className="text-sm text-zinc-900">
+          {value != null ? formatCurrency(value) : "—"}
+        </span>
+      );
+    },
+  }),
   columnHelper.accessor("rating", {
     header: "Rating",
     cell: (info) => {
@@ -193,7 +206,7 @@ export default function FreelancersTable({
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-zinc-50 pb-8 pt-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6">
         <input
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
