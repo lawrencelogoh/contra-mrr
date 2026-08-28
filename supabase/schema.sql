@@ -38,3 +38,29 @@ create policy "public read freelancers"
   on freelancers
   for select
   using (true);
+
+-- ---------------------------------------------------------------------------
+-- Gigs / work performed by freelancers.
+-- Costs are optional: not every gig has a recorded amount, so amount and
+-- currency are nullable and only validated when present.
+-- ---------------------------------------------------------------------------
+
+create table if not exists gigs (
+  id uuid primary key default gen_random_uuid(),
+  freelancer_id uuid not null references freelancers (id) on delete cascade,
+  title text not null,
+  amount numeric(12, 2) check (amount is null or amount >= 0),
+  created_at timestamptz not null default now(),
+  unique (freelancer_id, title)
+);
+
+create index if not exists gigs_freelancer_id_idx on gigs (freelancer_id);
+
+-- Public read-only, matching the freelancers table.
+alter table gigs enable row level security;
+
+drop policy if exists "public read gigs" on gigs;
+create policy "public read gigs"
+  on gigs
+  for select
+  using (true);

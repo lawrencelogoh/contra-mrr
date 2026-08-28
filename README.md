@@ -48,3 +48,21 @@ pnpm sync-contra --url https://contra.com/discover?view=people&sort=newest
 # Adjust delay between API calls (ms, default 2000)
 pnpm sync-contra --delay 3000
 ```
+
+## Work Scripts
+
+Per-freelancer scripts that query Contra's internal GraphQL API for a user's gigs / portfolio projects.
+
+```sh
+# Print a freelancer's gigs (title, date, client, and cost when present)
+pnpm fetch-work mark_vassilevskiy
+pnpm fetch-work --url https://contra.com/mark_vassilevskiy/work
+
+# Dump the raw gig JSON (e.g. for analysis)
+pnpm dump-work mark_vassilevskiy
+pnpm dump-work mark_vassilevskiy --out mark.json   # writes a clean file
+pnpm dump-work --url https://contra.com/mark_vassilevskiy/work
+
+# Note: piping `pnpm dump-work ... > file.json` also captures the pnpm
+# banner, so prefer `--out <file>` or run via `npx tsx scripts/dump-work.mts`.
+```

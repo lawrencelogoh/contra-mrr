@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync-contra": "tsx --env-file=.env.local scripts/sync-contra.mts"
+    "sync-contra": "tsx --env-file=.env.local scripts/sync-contra.mts",
+    "fetch-work": "tsx scripts/fetch-work.mts",
+    "dump-work": "tsx scripts/dump-work.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
