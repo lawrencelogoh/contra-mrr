@@ -15,6 +15,7 @@ async function getFreelancers(): Promise<Freelancer[]> {
         "link, display_username, platform_earnings_badge, hired_count, first_name, last_name, title, rating"
       )
       .order("feed_position", { nullsFirst: false })
+      .order("display_username", { ascending: true })
       .range(freelancers.length, freelancers.length + PAGE_SIZE - 1);
 
     if (error) {
