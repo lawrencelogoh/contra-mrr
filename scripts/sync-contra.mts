@@ -26,7 +26,7 @@ import {
 
 const DEFAULT_URL = "https://contra.com/discover?view=people&sort=most-earned";
 const API_ENDPOINT = "https://contra.com/api/?operationName=DiscoverSearchIndependentsSectionRefetchQuery";
-const DOC_ID = "ee9a23ff9c08ffe6d90d4501ebbb94b1";
+const DOC_ID = "d3792011101a2b88db5c68448ffab2d9";
 const PAGE_SIZE = 24;
 const UPSERT_BATCH = 50;
 
