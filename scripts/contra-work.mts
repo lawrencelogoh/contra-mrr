@@ -50,7 +50,7 @@ export async function fetchPortfolioProjects(
   let after: string | null = null;
 
   while (true) {
-    const resp = await fetch(API_ENDPOINT, {
+    const resp: Response = await fetch(API_ENDPOINT, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -69,9 +69,9 @@ export async function fetchPortfolioProjects(
 
     if (!resp.ok) throw new Error(`API error: ${resp.status} ${resp.statusText}`);
 
-    const doc = await resp.json();
-    const node = doc?.data?.node;
-    const projects = node?.paginatedPortfolioProjects;
+    const doc: any = await resp.json();
+    const node: any = doc?.data?.node;
+    const projects: any = node?.paginatedPortfolioProjects;
     if (!projects) throw new Error(`Unexpected API response: ${JSON.stringify(doc).slice(0, 300)}`);
 
     for (const edge of projects.edges ?? []) {

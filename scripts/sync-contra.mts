@@ -297,7 +297,7 @@ interface GigSyncResult {
 }
 
 async function syncGigs(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   profiles: ContraProfile[],
   idByUsername: Map<string, string>,
   delayMs: number,
@@ -351,7 +351,7 @@ async function syncGigs(
     const batch = upserts.slice(i, i + UPSERT_BATCH);
     const { error } = await supabase
       .from("gigs")
-      .upsert(batch, { onConflict: "project_analytics_id" });
+      .upsert(batch as any[], { onConflict: "project_analytics_id" });
     if (error) {
       log(chalk.red("✕"), `Gig batch error: ${error.message}`);
       gigErrors += batch.length;
